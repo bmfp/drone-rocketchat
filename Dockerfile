@@ -2,6 +2,7 @@ FROM alpine:3.11 as buildenv
 RUN apk add go git && \
     cd /tmp/ && \
     git clone https://github.com/bmfp/drone-rocketchat.git && \
+    cd drone-rocketchat && \
     ls -lrt . && \
     GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o rocket
 
