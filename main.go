@@ -181,8 +181,8 @@ func run(cmd *cobra.Command, args []string) error {
 		},
 		Config: Config{
 			URL:       viperGetStrings([]string{"plugin_url", "url"}),
-			Insecure:  viperGetBool([]string{"insecure"}),
-			TrustedCA: viperGetStrings([]string{"trusted-ca"}),
+			Insecure:  viperGetBool([]string{"plugin_insecure", "insecure"}),
+			TrustedCA: viperGetStrings([]string{"plugin_trustedca", "trustedca"}),
 			UserID:    viperGetStrings([]string{"plugin_userId", "userId"}),
 			Token:     viperGetStrings([]string{"plugin_userToken", "userToken"}),
 			Message:   viperGetStrings([]string{"plugin_message", "message"}),
@@ -195,6 +195,7 @@ func run(cmd *cobra.Command, args []string) error {
 		},
 	}
 
+	//
 	// fmt.Printf("url: %q\n", viperGetStrings([]string{"plugin_url", "url"}))
 	// fmt.Printf("insecure: %q\n", viperGetStrings([]string{"insecure"}))
 	// fmt.Printf("trusted-ca: %q\n", viperGetStrings([]string{"trusted-ca"}))
