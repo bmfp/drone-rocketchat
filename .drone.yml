@@ -1,16 +1,17 @@
 ---
-    kind: pipeline
-    name: build
+kind: pipeline
+name: build
 
-    steps:
-    - name: docker  
-      image: plugins/docker
-      settings:
-        username:
-          from_secret: harbor_user
-        password:
-          from_secret: harbor_token
-        repo: drone-rocketchat
-        repo: registry.ver.bmfp.fr/drone-rocketchat/drone-rocketchat
-        registry: registry.ver.bmfp.fr
-        tags: latest
+steps:
+- name: docker  
+    image: plugins/docker
+    settings:
+    username:
+        from_secret: harbor_user
+    password:
+        from_secret: harbor_token
+    repo: drone-rocketchat
+    repo: registry.ver.bmfp.fr/drone-rocketchat/drone-rocketchat
+    registry: registry.ver.bmfp.fr
+    tags: latest
+    target: buildenv

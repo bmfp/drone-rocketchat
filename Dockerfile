@@ -4,7 +4,7 @@ RUN apk add go git && \
     git clone https://github.com/bmfp/drone-rocketchat.git && \
     cd drone-rocketchat && \
     ls -lrt . && \
-    go get github.com/spf13/cobra github.com/spf13/viper && \
+    go get -v github.com/spf13/cobra github.com/spf13/viper && \
     GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o rocket
 
 FROM alpine:3.11
