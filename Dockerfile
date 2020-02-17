@@ -6,7 +6,8 @@ RUN apk add --update-cache --no-cache --upgrade --virtual buildenv go git && \
     cd drone-rocketchat && \
     go get -v github.com/spf13/cobra github.com/spf13/viper && \
     GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /bin/rocket && \
+    strip /bin/rocket && \
     apk del buildenv && \
-    rm -rf /tmp/drone-rocketchat
+    rm -rf /tmp/drone-rocketchat /root/go /root/.cache 
 
 ENTRYPOINT [ "/bin/rocket" ]
