@@ -14,4 +14,3 @@ steps:
     repo: registry.ver.bmfp.fr/drone-rocketchat/drone-rocketchat
     registry: registry.ver.bmfp.fr
     tags: latest
-    target: buildenv
