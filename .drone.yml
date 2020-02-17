@@ -4,12 +4,12 @@ name: build
 
 steps:
 - name: docker  
-    image: plugins/docker
-    settings:
+  image: plugins/docker
+  settings:
     username:
-        from_secret: harbor_user
+      from_secret: harbor_user
     password:
-        from_secret: harbor_token
+      from_secret: harbor_token
     repo: drone-rocketchat
     repo: registry.ver.bmfp.fr/drone-rocketchat/drone-rocketchat
     registry: registry.ver.bmfp.fr
