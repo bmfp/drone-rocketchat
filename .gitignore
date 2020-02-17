@@ -14,3 +14,6 @@
 
 # binary name
 drone-rocketchat
+
+# envfile
+*.env
