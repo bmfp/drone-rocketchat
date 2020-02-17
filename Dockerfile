@@ -1,5 +1,6 @@
 FROM alpine:3.11 as buildenv
 RUN apk add go && \
+    ls -lrt . && \
     GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o rocket
 
 FROM alpine:3.11
