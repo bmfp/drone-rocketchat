@@ -6,6 +6,7 @@ steps:
   - name: get tags
     image: busybox
     commands:
+      - find / -name main.go
       - echo "$(grep Version drone-rocketchat/main.go | cut -d'"' -f2),latest" > .tags
 
   - name: docker  
