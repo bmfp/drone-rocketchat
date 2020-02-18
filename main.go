@@ -202,7 +202,7 @@ func run(cmd *cobra.Command, args []string) error {
 	// fmt.Printf("userId: %q\n", viperGetStrings([]string{"plugin_userId", "userId"}))
 	// fmt.Printf("userToken: %q\n", viperGetStrings([]string{"plugin_userToken", "userToken"}))
 	// fmt.Printf("channel: %q\n", viperGetStrings([]string{"plugin_channel", "channel"}))
-	fmt.Printf("message: %q\n", viperGetStrings([]string{"plugin_message", "message"}))
+	// fmt.Printf("message: %q\n", viperGetStrings([]string{"plugin_message", "message"}))
 	// fmt.Printf("avatar: %q\n", viperGetStrings([]string{"plugin_avatar_url", "avatar_url"}))
 	// fmt.Printf("drone: %q\n", viperGetStrings([]string{"drone"}))
 	// fmt.Printf("repo: %q\n", viperGetStrings([]string{"drone_repo", "github_repository"}))
