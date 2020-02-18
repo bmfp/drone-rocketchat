@@ -6,8 +6,7 @@ steps:
   - name: get tags
     image: busybox
     commands:
-      - grep Version main.go | cut -d'"' -f2 > .tags
-      - echo latest >> .tags
+      - echo "$(grep Version main.go | cut -d'"' -f2 > .tags),latest" > .tags
 
   - name: docker  
     image: plugins/docker
