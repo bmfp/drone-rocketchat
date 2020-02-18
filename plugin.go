@@ -121,6 +121,8 @@ func (p *Plugin) Exec() error {
 		return errors.New("missing Rocket.Chat config")
 	}
 
+	fmt.Println(p.Config.Message)
+	fmt.Println(len(p.Config.Message))
 	if len(p.Config.Message) > 0 {
 		message = p.Config.Message
 	} else {
