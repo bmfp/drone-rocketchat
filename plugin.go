@@ -189,6 +189,8 @@ func (p *Plugin) SendMessage(msg string) error {
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
 		log.Fatal("Failed to send notification")
+	} else {
+		log.Output(2, "Message sent")
 	}
 
 	return nil
