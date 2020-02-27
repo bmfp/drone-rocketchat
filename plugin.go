@@ -130,7 +130,7 @@ func (p *Plugin) Exec() error {
 	t := template.Must(template.New("message").Parse(message))
 	err := t.Execute(&txt, p)
 	if err != nil {
-		fmt.Println("executing template:", err)
+		fmt.Println("something went wrong executing template:", err)
 		message = p.Message()
 	}
 	err = p.SendMessage(txt.String())
