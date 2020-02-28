@@ -59,13 +59,15 @@ type (
 		Message   string
 		Drone     bool
 		GitHub    bool
+		EnvFile   string
 	}
 
 	// Payload struct
 	Payload struct {
-		Channel string `json:"channel"`
-		Text    string `json:"text"`
-		Avatar  string `json:"avatar"`
+		Channel         string                 `json:"channel"`
+		Text            string                 `json:"text"`
+		Avatar          string                 `json:"avatar"`
+		CustomMSgFields map[string]interface{} `json:"custommsg"`
 	}
 
 	// Plugin values.
@@ -188,7 +190,7 @@ func (p *Plugin) SendMessage(msg string) error {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		log.Fatal("Failed to send notification")
+		log.Fatal("Failed to send notification", resp)
 	} else {
 		log.Output(2, "Message sent")
 	}

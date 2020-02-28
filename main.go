@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -33,6 +34,8 @@ func main() {
 	viper.BindPFlag("channel", flags.Lookup("channel"))
 	flags.String("message", "", "The message contents (up to 2000 characters)")
 	viper.BindPFlag("message", flags.Lookup("message"))
+	flags.String("custom-msg-fileds", "", "Custom fields, json dictionnary")
+	viper.BindPFlag("custom-msg-fileds", flags.Lookup("custom-msg-fileds"))
 	flags.String("avatar-url", "", "Override the default avatar of user")
 	viper.BindPFlag("avatar-url", flags.Lookup("avatar-url"))
 	flags.Bool("drone", false, "Environment is drone")
@@ -137,11 +140,32 @@ func viperGetInt64(strList []string) int64 {
 	return 0
 }
 
+func viperGetJSON(strList []string) map[string]interface{} {
+	ret := make(map[string]interface{})
+	var v interface{}
+	for _, s := range strList {
+		if viper.IsSet(s) {
+			json.Unmarshal([]byte(viper.GetString(s)), &v)
+			ret = v.(map[string]interface{})
+
+			return ret
+		}
+	}
+	return ret
+}
+
 func run(cmd *cobra.Command, args []string) error {
 
 	// did we get an environment file
+	var gotEnvFile bool = false
 	if viper.IsSet("env-file") && viper.GetString("env-file") != "" {
 		viper.SetConfigName(viper.GetString("env-file"))
+		gotEnvFile = true
+	} else if viperGetStrings([]string{"plugin_env_file", "env_file"}) != "" {
+		viper.SetConfigName(viperGetStrings([]string{"plugin_env_file", "env_file"}))
+		gotEnvFile = true
+	}
+	if gotEnvFile {
 		viper.AddConfigPath(".")
 		err := viper.ReadInConfig() // Find and read the config file
 		if err != nil {             // Handle errors reading the config file
@@ -188,10 +212,12 @@ func run(cmd *cobra.Command, args []string) error {
 			Message:   viperGetStrings([]string{"plugin_message", "message"}),
 			Drone:     viperGetBool([]string{"drone"}),
 			GitHub:    viperGetBool([]string{"plugin_github", "github"}),
+			EnvFile:   viperGetStrings([]string{"plugin_env_file", "env_file"}),
 		},
 		Payload: Payload{
-			Avatar:  viperGetStrings([]string{"plugin_avatar_url", "avatar_url"}),
-			Channel: viperGetStrings([]string{"plugin_channel", "channel"}),
+			Avatar:          viperGetStrings([]string{"plugin_avatar_url", "avatar_url"}),
+			Channel:         viperGetStrings([]string{"plugin_channel", "channel"}),
+			CustomMSgFields: viperGetJSON([]string{"custom_msg_fields"}),
 		},
 	}
 
@@ -203,6 +229,7 @@ func run(cmd *cobra.Command, args []string) error {
 	// fmt.Printf("userToken: %q\n", viperGetStrings([]string{"plugin_userToken", "userToken"}))
 	// fmt.Printf("channel: %q\n", viperGetStrings([]string{"plugin_channel", "channel"}))
 	// fmt.Printf("message: %q\n", viperGetStrings([]string{"plugin_message", "message"}))
+	// fmt.Printf("customfields: %q\n", viperGetStrings([]string{"plugin_custom_msg_fields", "custom_msg_fields"}))
 	// fmt.Printf("avatar: %q\n", viperGetStrings([]string{"plugin_avatar_url", "avatar_url"}))
 	// fmt.Printf("drone: %q\n", viperGetStrings([]string{"drone"}))
 	// fmt.Printf("repo: %q\n", viperGetStrings([]string{"drone_repo", "github_repository"}))
