@@ -256,6 +256,9 @@ func run(cmd *cobra.Command, args []string) error {
 	// fmt.Printf("github.event.path: %q\n", viperGetStrings([]string{"github_event_path"}))
 	// fmt.Printf("github.workspace: %q\n", viperGetStrings([]string{"github_workspace"}))
 
-	return plugin.Exec()
-	// return nil
+	err := plugin.Exec()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return err
 }
