@@ -77,7 +77,7 @@ func main() {
 	flags.String("env-file", "", "Source environment file: file.env, file.yml, ...")
 	viper.BindPFlag("env-file", flags.Lookup("env-file"))
 	flags.Bool("github", false, "Environment is GitHub Action")
-	viper.BindPFlag("drone", flags.Lookup("drone"))
+	viper.BindPFlag("github", flags.Lookup("github"))
 	flags.String("github.workflow", "", "The name of the Github workflow")
 	viper.BindPFlag("github.workflow", flags.Lookup("github.workflow"))
 	flags.String("github.action", "", "The name of the Github action")
@@ -88,6 +88,8 @@ func main() {
 	viper.BindPFlag("github.event.path", flags.Lookup("github.event.path"))
 	flags.String("github.event.workspace", "", "The name of the Github event.workspace")
 	viper.BindPFlag("github.event.workspace", flags.Lookup("github.event.workspace"))
+	flags.Bool("debug", false, "Debug")
+	viper.BindPFlag("debug", flags.Lookup("debug"))
 
 	cmd.Execute()
 }
@@ -213,6 +215,7 @@ func run(cmd *cobra.Command, args []string) error {
 			Drone:     viperGetBool([]string{"drone"}),
 			GitHub:    viperGetBool([]string{"plugin_github", "github"}),
 			EnvFile:   viperGetStrings([]string{"plugin_env_file", "env_file"}),
+			Debug:     viperGetBool([]string{"plugin_debug", "debug"}),
 		},
 		Payload: Payload{
 			Avatar:          viperGetStrings([]string{"plugin_avatar_url", "avatar_url"}),
@@ -221,40 +224,41 @@ func run(cmd *cobra.Command, args []string) error {
 		},
 	}
 
-	//
-	// fmt.Printf("url: %q\n", viperGetStrings([]string{"plugin_url", "url"}))
-	// fmt.Printf("insecure: %q\n", viperGetStrings([]string{"insecure"}))
-	// fmt.Printf("trusted-ca: %q\n", viperGetStrings([]string{"trusted-ca"}))
-	// fmt.Printf("userId: %q\n", viperGetStrings([]string{"plugin_userId", "userId"}))
-	// fmt.Printf("userToken: %q\n", viperGetStrings([]string{"plugin_userToken", "userToken"}))
-	// fmt.Printf("channel: %q\n", viperGetStrings([]string{"plugin_channel", "channel"}))
-	// fmt.Printf("message: %q\n", viperGetStrings([]string{"plugin_message", "message"}))
-	// fmt.Printf("customfields: %q\n", viperGetStrings([]string{"plugin_custom_msg_fields", "custom_msg_fields"}))
-	// fmt.Printf("avatar: %q\n", viperGetStrings([]string{"plugin_avatar_url", "avatar_url"}))
-	// fmt.Printf("drone: %q\n", viperGetStrings([]string{"drone"}))
-	// fmt.Printf("repo: %q\n", viperGetStrings([]string{"drone_repo", "github_repository"}))
-	// fmt.Printf("repo.namespace: %q\n", viperGetStrings([]string{"drone_repo_owner", "drone_repo_namespace", "github_actor"}))
-	// fmt.Printf("repo.name: %q\n", viperGetStrings([]string{"drone_repo_name"}))
-	// fmt.Printf("commit.sha: %q\n", viperGetStrings([]string{"drone_commit_sha", "github_sha"}))
-	// fmt.Printf("commit.ref: %q\n", viperGetStrings([]string{"drone_commit_ref", "github_ref"}))
-	// fmt.Printf("commit.branch: %q\n", viperGetStrings([]string{"drone_commit_branch"}))
-	// fmt.Printf("commit.author: %q\n", viperGetStrings([]string{"drone_commit_author"}))
-	// fmt.Printf("commit.author.email: %q\n", viperGetStrings([]string{"drone_commit_author_email"}))
-	// fmt.Printf("commit.author.avatar: %q\n", viperGetStrings([]string{"drone_commit_author_avatar"}))
-	// fmt.Printf("commit.message: %q\n", viperGetStrings([]string{"drone_commit_message"}))
-	// fmt.Printf("build.event: %q\n", viperGetStrings([]string{"drone_build_event"}))
-	// fmt.Printf("build.number: %q\n", viperGetStrings([]string{"drone_build_number"}))
-	// fmt.Printf("build.status: %q\n", viperGetStrings([]string{"drone_build_status"}))
-	// fmt.Printf("build.link: %q\n", viperGetStrings([]string{"drone_build_link"}))
-	// fmt.Printf("build.tag: %q\n", viperGetStrings([]string{"drone_build_tag"}))
-	// fmt.Printf("job.started: %q\n", viperGetStrings([]string{"drone_job_started"}))
-	// fmt.Printf("job.finished: %q\n", viperGetStrings([]string{"drone_job_finished"}))
-	// fmt.Printf("github: %q\n", viperGetStrings([]string{"plugin_github", "github"}))
-	// fmt.Printf("github.workflow: %q\n", viperGetStrings([]string{"github_workflow"}))
-	// fmt.Printf("github.action: %q\n", viperGetStrings([]string{"github_action"}))
-	// fmt.Printf("github.event.name: %q\n", viperGetStrings([]string{"github_event_name"}))
-	// fmt.Printf("github.event.path: %q\n", viperGetStrings([]string{"github_event_path"}))
-	// fmt.Printf("github.workspace: %q\n", viperGetStrings([]string{"github_workspace"}))
+	if plugin.Config.Debug {
+		fmt.Printf("url: %q\n", plugin.Config.URL)
+		fmt.Printf("insecure: %q\n", plugin.Config.insecure)
+		fmt.Printf("trusted-ca: %q\n", plugin.Config.TrustedCA)
+		fmt.Printf("userId: %q\n", plugin.Config.UserID)
+		fmt.Printf("userToken: %q\n", plugin.Config.Token)
+		fmt.Printf("channel: %q\n", plugin.Payload.Channel)
+		fmt.Printf("message: %q\n", plugin.Payload.Message)
+		fmt.Printf("customfields: %q\n", plugin.Payload.CustomMSgFields)
+		fmt.Printf("avatar: %q\n", plugin.Payload.Avatar)
+		fmt.Printf("drone: %q\n", plugin.Config.Drone)
+		fmt.Printf("repo: %q\n", plugin.Repo.FullName)
+		fmt.Printf("repo.namespace: %q\n", plugin.Repo.Namespace)
+		fmt.Printf("repo.name: %q\n", plugin.Repo.Name)
+		fmt.Printf("commit.sha: %q\n", plugin.Build.Commit)
+		fmt.Printf("commit.ref: %q\n", plugin.Build.RefSpec)
+		fmt.Printf("commit.branch: %q\n", plugin.Build.Branch)
+		fmt.Printf("commit.author: %q\n", plugin.Build.Author)
+		fmt.Printf("commit.author.email: %q\n", plugin.Build.Email)
+		fmt.Printf("commit.author.avatar: %q\n", plugin.Build.Avatar)
+		fmt.Printf("commit.message: %q\n", plugin.Build.Message)
+		fmt.Printf("build.event: %q\n", plugin.Build.Event)
+		fmt.Printf("build.number: %q\n", plugin.Build.Number)
+		fmt.Printf("build.status: %q\n", plugin.Build.Status)
+		fmt.Printf("build.link: %q\n", plugin.Build.Link)
+		fmt.Printf("build.tag: %q\n", plugin.Build.Tag)
+		fmt.Printf("job.started: %q\n", plugin.Build.Started)
+		fmt.Printf("job.finished: %q\n", plugin.Build.Finished)
+		fmt.Printf("github: %q\n", plugin.Config.GitHub)
+		fmt.Printf("github.workflow: %q\n", plugin.GitHub.Workflow)
+		fmt.Printf("github.action: %q\n", plugin.GitHub.Action)
+		fmt.Printf("github.event.name: %q\n", plugin.GitHub.EventName)
+		fmt.Printf("github.event.path: %q\n", plugin.GitHub.EventPath)
+		fmt.Printf("github.workspace: %q\n", plugin.GitHub.Workspace)
+	}
 
 	err := plugin.Exec()
 	if err != nil {

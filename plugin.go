@@ -60,6 +60,7 @@ type (
 		Drone     bool
 		GitHub    bool
 		EnvFile   string
+		Debug     bool
 	}
 
 	// Payload struct
