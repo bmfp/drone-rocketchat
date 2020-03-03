@@ -226,12 +226,12 @@ func run(cmd *cobra.Command, args []string) error {
 
 	if plugin.Config.Debug {
 		fmt.Printf("url: %q\n", plugin.Config.URL)
-		fmt.Printf("insecure: %q\n", plugin.Config.insecure)
+		fmt.Printf("insecure: %q\n", plugin.Config.Insecure)
 		fmt.Printf("trusted-ca: %q\n", plugin.Config.TrustedCA)
 		fmt.Printf("userId: %q\n", plugin.Config.UserID)
 		fmt.Printf("userToken: %q\n", plugin.Config.Token)
 		fmt.Printf("channel: %q\n", plugin.Payload.Channel)
-		fmt.Printf("message: %q\n", plugin.Payload.Message)
+		fmt.Printf("message: %q\n", plugin.Config.Message)
 		fmt.Printf("customfields: %q\n", plugin.Payload.CustomMSgFields)
 		fmt.Printf("avatar: %q\n", plugin.Payload.Avatar)
 		fmt.Printf("drone: %q\n", plugin.Config.Drone)
