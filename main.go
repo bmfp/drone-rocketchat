@@ -15,7 +15,7 @@ func main() {
 		RunE:    run,
 		Short:   "Sending message to Rocket.Chat using Rest API",
 		Use:     "drone-rocketchat",
-		Version: "0.0.1",
+		Version: "0.0.2",
 	}
 
 	viper.AutomaticEnv()
