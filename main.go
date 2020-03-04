@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"path/filepath"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -158,17 +159,21 @@ func viperGetJSON(strList []string) map[string]interface{} {
 
 func run(cmd *cobra.Command, args []string) error {
 
+	var configFilePath string
+
 	// did we get an environment file
 	var gotEnvFile bool = false
 	if viper.IsSet("env-file") && viper.GetString("env-file") != "" {
-		viper.SetConfigName(viper.GetString("env-file"))
+		configFilePath = viper.GetString("env-file")
 		gotEnvFile = true
 	} else if viperGetStrings([]string{"plugin_env_file", "env_file"}) != "" {
-		viper.SetConfigName(viperGetStrings([]string{"plugin_env_file", "env_file"}))
+		configFilePath = viperGetStrings([]string{"plugin_env_file", "env_file"})
 		gotEnvFile = true
 	}
 	if gotEnvFile {
-		viper.AddConfigPath(".")
+		viper.SetConfigName(configFilePath)
+		fp := filepath.Dir(configFilePath)
+		viper.AddConfigPath(filepath.Dir(fp))
 		err := viper.ReadInConfig() // Find and read the config file
 		if err != nil {             // Handle errors reading the config file
 			panic(fmt.Errorf("Fatal error config file: %s", err))
