@@ -6,6 +6,7 @@ import (
 	"log"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -171,9 +172,10 @@ func run(cmd *cobra.Command, args []string) error {
 		gotEnvFile = true
 	}
 	if gotEnvFile {
-		viper.SetConfigName(configFilePath)
-		fp := filepath.Dir(configFilePath)
-		viper.AddConfigPath(filepath.Dir(fp))
+		configFileBase := filepath.Base(configFilePath)
+		lastDotIndex := strings.LastIndex(configFileBase, ".")
+		viper.SetConfigName(configFileBase[:lastDotIndex])
+		viper.AddConfigPath(filepath.Dir(configFilePath))
 		err := viper.ReadInConfig() // Find and read the config file
 		if err != nil {             // Handle errors reading the config file
 			panic(fmt.Errorf("Fatal error config file: %s", err))
