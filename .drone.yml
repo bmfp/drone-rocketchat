@@ -3,19 +3,20 @@ kind: pipeline
 name: build
 
 steps:
-  - name: get tags
-    image: busybox
-    commands:
-      - echo "$(grep Version /drone/src/main.go | cut -d'"' -f2),latest" > .tags
+- name: get tags
+  image: busybox
+  commands:
+  - echo "$(grep Version /drone/src/main.go | cut -d'"' -f2),latest" > .tags
+  - cat .tags
 
-  - name: docker  
-    image: plugins/docker
-    settings:
-      username:
-        from_secret: harbor_user
-      password:
-        from_secret: harbor_token
-      repo: drone-rocketchat
-      repo: registry.ver.bmfp.fr/drone-rocketchat/drone-rocketchat
-      registry: registry.ver.bmfp.fr
-      tags: latest
+- name: docker  
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: harbor_user
+    password:
+      from_secret: harbor_token
+    repo: drone-rocketchat
+    repo: registry.ver.bmfp.fr/drone-rocketchat/drone-rocketchat
+    registry: registry.ver.bmfp.fr
+    tags: latest
