@@ -12,6 +12,7 @@ steps:
 - name: docker  
   image: plugins/docker
   settings:
+    debug: true
     username:
       from_secret: harbor_user
     password:
