@@ -110,7 +110,7 @@ func viperGetBool(strList []string) bool {
 		if viper.IsSet(s) {
 			b, err := strconv.ParseBool(viper.GetString(s))
 			if err != nil {
-				log.Fatal(fmt.Sprintf("%s is not parsable as boolean", s))
+				log.Fatalf("%s is not parsable as boolean", s)
 			}
 			return b
 		}
@@ -123,7 +123,7 @@ func viperGetFloat64(strList []string) float64 {
 		if viper.IsSet(s) {
 			f, err := strconv.ParseFloat(viper.GetString(s), 64)
 			if err != nil {
-				log.Fatal(fmt.Sprintf("%s is not parsable as float", s))
+				log.Fatalf("%s is not parsable as float", s)
 			}
 			return f
 		}
@@ -136,7 +136,7 @@ func viperGetInt64(strList []string) int64 {
 		if viper.IsSet(s) {
 			i, err := strconv.ParseInt(viper.GetString(s), 10, 64)
 			if err != nil {
-				log.Fatal(fmt.Sprintf("%s is not parsable an int", s))
+				log.Fatalf("%s is not parsable an int", s)
 			}
 			return i
 		}
@@ -178,7 +178,7 @@ func run(cmd *cobra.Command, args []string) error {
 		viper.AddConfigPath(filepath.Dir(configFilePath))
 		err := viper.ReadInConfig() // Find and read the config file
 		if err != nil {             // Handle errors reading the config file
-			panic(fmt.Errorf("Fatal error config file: %s", err))
+			log.Panicf("Fatal error config file: %s", err)
 		}
 	}
 

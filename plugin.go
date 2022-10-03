@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -95,7 +96,7 @@ func clientHTTP(p *Plugin) (client *http.Client) {
 		}
 		// custom CAs given
 		if len(p.Config.TrustedCA) > 0 {
-			caCert, err := ioutil.ReadFile(fmt.Sprintf("%s", p.Config.TrustedCA))
+			caCert, err := ioutil.ReadFile(p.Config.TrustedCA)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -134,7 +135,7 @@ func (p *Plugin) Exec() error {
 	err := t.Execute(&txt, p)
 	if err != nil {
 		fmt.Println("something went wrong executing template:", err)
-		message = p.Message()
+		txt.WriteString(p.Message())
 	}
 	err = p.SendMessage(txt.String())
 	if err != nil {
@@ -173,6 +174,10 @@ func (p *Plugin) SendMessage(msg string) error {
 	if err := json.NewEncoder(b).Encode(payload); err != nil {
 		return err
 	}
+	// pp, _ := io.ReadAll(b)
+	// log.Printf("Payload: %s", string(pp))
+	// pp, _ = io.ReadAll(b)
+	// log.Printf("Payload : %s", string(pp))
 	// client := &http.Client{}
 	client := clientHTTP(p)
 	req, err := http.NewRequest("POST", URL, b)
@@ -191,7 +196,8 @@ func (p *Plugin) SendMessage(msg string) error {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		log.Fatal("Failed to send notification", resp)
+		body, _ := io.ReadAll(resp.Body)
+		log.Fatalf("Failed to send notification:\nRESPONSE\nStatus code: %d\nHeaders: %s\nBody: %s\n", resp.StatusCode, resp.Header, string(body))
 	} else {
 		log.Output(2, "Message sent")
 	}
