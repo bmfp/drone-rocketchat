@@ -174,11 +174,6 @@ func (p *Plugin) SendMessage(msg string) error {
 	if err := json.NewEncoder(b).Encode(payload); err != nil {
 		return err
 	}
-	// pp, _ := io.ReadAll(b)
-	// log.Printf("Payload: %s", string(pp))
-	// pp, _ = io.ReadAll(b)
-	// log.Printf("Payload : %s", string(pp))
-	// client := &http.Client{}
 	client := clientHTTP(p)
 	req, err := http.NewRequest("POST", URL, b)
 	if err != nil {
