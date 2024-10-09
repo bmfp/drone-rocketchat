@@ -212,6 +212,15 @@ func run(cmd *cobra.Command, args []string) error {
 			Started:  viperGetFloat64([]string{"drone_job_started"}),
 			Finished: viperGetFloat64([]string{"drone_job_finished"}),
 		},
+		Commit: Commit{
+			Hash:    viperGetStrings([]string{"drone_commit_sha", "github_sha"}),
+			RefSpec: viperGetStrings([]string{"drone_commit_ref", "github_ref"}),
+			Branch:  viperGetStrings([]string{"drone_commit_branch"}),
+			Author:  viperGetStrings([]string{"drone_commit_author"}),
+			Email:   viperGetStrings([]string{"drone_commit_author_email"}),
+			Avatar:  viperGetStrings([]string{"drone_commit_author_avatar"}),
+			Message: viperGetStrings([]string{"drone_commit_message"}),
+		},
 		Config: Config{
 			URL:       viperGetStrings([]string{"plugin_url", "url"}),
 			Insecure:  viperGetBool([]string{"plugin_insecure", "insecure"}),
@@ -245,13 +254,20 @@ func run(cmd *cobra.Command, args []string) error {
 		fmt.Printf("repo: %q\n", plugin.Repo.FullName)
 		fmt.Printf("repo.namespace: %q\n", plugin.Repo.Namespace)
 		fmt.Printf("repo.name: %q\n", plugin.Repo.Name)
-		fmt.Printf("commit.sha: %q\n", plugin.Build.Commit)
-		fmt.Printf("commit.ref: %q\n", plugin.Build.RefSpec)
-		fmt.Printf("commit.branch: %q\n", plugin.Build.Branch)
-		fmt.Printf("commit.author: %q\n", plugin.Build.Author)
-		fmt.Printf("commit.author.email: %q\n", plugin.Build.Email)
-		fmt.Printf("commit.author.avatar: %q\n", plugin.Build.Avatar)
-		fmt.Printf("commit.message: %q\n", plugin.Build.Message)
+		fmt.Printf("commit.hash: %q\n", plugin.Commit.Hash)
+		fmt.Printf("commit.ref: %q\n", plugin.Commit.RefSpec)
+		fmt.Printf("commit.branch: %q\n", plugin.Commit.Branch)
+		fmt.Printf("commit.author: %q\n", plugin.Commit.Author)
+		fmt.Printf("commit.author.email: %q\n", plugin.Commit.Email)
+		fmt.Printf("commit.author.avatar: %q\n", plugin.Commit.Avatar)
+		fmt.Printf("build.message: %q\n", plugin.Commit.Message)
+		fmt.Printf("build.sha: %q\n", plugin.Build.Commit)
+		fmt.Printf("build.ref: %q\n", plugin.Build.RefSpec)
+		fmt.Printf("build.branch: %q\n", plugin.Build.Branch)
+		fmt.Printf("build.author: %q\n", plugin.Build.Author)
+		fmt.Printf("build.author.email: %q\n", plugin.Build.Email)
+		fmt.Printf("build.author.avatar: %q\n", plugin.Build.Avatar)
+		fmt.Printf("build.message: %q\n", plugin.Build.Message)
 		fmt.Printf("build.event: %q\n", plugin.Build.Event)
 		fmt.Printf("build.number: %q\n", plugin.Build.Number)
 		fmt.Printf("build.status: %q\n", plugin.Build.Status)
