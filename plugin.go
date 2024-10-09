@@ -50,6 +50,16 @@ type (
 		Finished float64
 	}
 
+	Commit struct {
+		Hash    string
+		RefSpec string
+		Branch  string
+		Author  string
+		Avatar  string
+		Message string
+		Email   string
+	}
+
 	// Config for the plugin.
 	Config struct {
 		URL       string
@@ -77,6 +87,7 @@ type (
 		GitHub  GitHub
 		Repo    Repo
 		Build   Build
+		Commit  Commit
 		Config  Config
 		Payload Payload
 	}
@@ -159,9 +170,9 @@ func (p Plugin) Message() string {
 	return fmt.Sprintf("[%s] <%s> (%s)『%s』by %s",
 		p.Build.Status,
 		p.Build.Link,
-		p.Build.Branch,
-		p.Build.Message,
-		p.Build.Author,
+		p.Commit.Branch,
+		p.Commit.Message,
+		p.Commit.Author,
 	)
 }
 
