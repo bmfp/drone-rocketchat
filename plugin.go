@@ -196,6 +196,7 @@ func (p *Plugin) SendMessage(msg string) error {
 	req.Header.Add("X-User-Id", p.Config.UserID)
 	req.Header.Add("X-Auth-Token", p.Config.Token)
 	// perform request
+	log.Output(2, "Sending notification")
 	resp, err := client.Do(req)
 	if err != nil {
 		return err
