@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.22
 RUN apk add --update-cache --no-cache --upgrade --virtual buildenv go git && \
     apk add --update-cache --no-cache --upgrade ca-certificates && \
     cd /tmp/ && \
