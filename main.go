@@ -17,7 +17,7 @@ func main() {
 		RunE:    run,
 		Short:   "Sending message to Rocket.Chat using Rest API",
 		Use:     "drone-rocketchat",
-		Version: "0.0.2",
+		Version: "0.0.3",
 	}
 
 	viper.AutomaticEnv()
@@ -32,8 +32,8 @@ func main() {
 	viper.BindPFlag("userId", flags.Lookup("userId"))
 	flags.String("userToken", "", "Rocket.chat user API token")
 	viper.BindPFlag("userToken", flags.Lookup("userToken"))
-	flags.String("channel", "", "Rocket.chat channel name")
-	viper.BindPFlag("channel", flags.Lookup("channel"))
+	flags.String("roomid", "", "Rocket.chat channel name/roomId")
+	viper.BindPFlag("roomid", flags.Lookup("roomid"))
 	flags.String("message", "", "The message contents (up to 2000 characters)")
 	viper.BindPFlag("message", flags.Lookup("message"))
 	flags.String("custom-msg-fileds", "", "Custom fields, json dictionnary")
@@ -235,7 +235,7 @@ func run(cmd *cobra.Command, args []string) error {
 		},
 		Payload: Payload{
 			Avatar:          viperGetStrings([]string{"plugin_avatar_url", "avatar_url"}),
-			Channel:         viperGetStrings([]string{"plugin_channel", "channel"}),
+			RoomId:          viperGetStrings([]string{"plugin_roomid", "roomid"}),
 			CustomMSgFields: viperGetJSON([]string{"custom_msg_fields"}),
 		},
 	}
@@ -246,7 +246,7 @@ func run(cmd *cobra.Command, args []string) error {
 		fmt.Printf("trusted-ca: %q\n", plugin.Config.TrustedCA)
 		fmt.Printf("userId: %q\n", plugin.Config.UserID)
 		fmt.Printf("userToken: %q\n", plugin.Config.Token)
-		fmt.Printf("channel: %q\n", plugin.Payload.Channel)
+		fmt.Printf("roomId: %q\n", plugin.Payload.RoomId)
 		fmt.Printf("message: %q\n", plugin.Config.Message)
 		fmt.Printf("customfields: %q\n", plugin.Payload.CustomMSgFields)
 		fmt.Printf("avatar: %q\n", plugin.Payload.Avatar)
