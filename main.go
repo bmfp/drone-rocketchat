@@ -34,6 +34,7 @@ func main() {
 	viper.BindPFlag("userToken", flags.Lookup("userToken"))
 	flags.String("roomid", "", "Rocket.chat channel name/roomId")
 	viper.BindPFlag("roomid", flags.Lookup("roomid"))
+	viper.BindPFlag("roomid", flags.Lookup("channel"))
 	flags.String("message", "", "The message contents (up to 2000 characters)")
 	viper.BindPFlag("message", flags.Lookup("message"))
 	flags.String("custom-msg-fileds", "", "Custom fields, json dictionnary")
