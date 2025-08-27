@@ -8,9 +8,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"text/template"
 )
@@ -76,10 +76,10 @@ type (
 
 	// Payload struct
 	Payload struct {
-		Channel         string                 `json:"channel"`
-		Text            string                 `json:"text"`
-		Avatar          string                 `json:"avatar"`
-		CustomMSgFields map[string]interface{} `json:"custommsg"`
+		RoomId          string         `json:"roomId"`
+		Text            string         `json:"text"`
+		Avatar          string         `json:"avatar"`
+		CustomMSgFields map[string]any `json:"custommsg"`
 	}
 
 	// Plugin values.
@@ -107,7 +107,7 @@ func clientHTTP(p *Plugin) (client *http.Client) {
 		}
 		// custom CAs given
 		if len(p.Config.TrustedCA) > 0 {
-			caCert, err := ioutil.ReadFile(p.Config.TrustedCA)
+			caCert, err := os.ReadFile(p.Config.TrustedCA)
 			if err != nil {
 				log.Fatal(err)
 			}
