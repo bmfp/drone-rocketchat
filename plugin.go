@@ -62,24 +62,25 @@ type (
 
 	// Config for the plugin.
 	Config struct {
-		URL       string
-		Insecure  bool
-		TrustedCA string
-		UserID    string
-		Token     string
-		Message   string
-		Drone     bool
-		GitHub    bool
-		EnvFile   string
-		Debug     bool
+		URL               string
+		Insecure          bool
+		TrustedCA         string
+		UserID            string
+		Token             string
+		Message           string
+		CustomMessageData map[string]any
+		Drone             bool
+		GitHub            bool
+		EnvFile           string
+		Debug             bool
 	}
 
 	// Payload struct
 	Payload struct {
-		RoomId          string         `json:"roomId"`
+		Channel         string         `json:"channel"`
 		Text            string         `json:"text"`
 		Avatar          string         `json:"avatar"`
-		CustomMSgFields map[string]any `json:"custommsg"`
+		CustomMSgFields map[string]any `json:"customFields,omitempty"`
 	}
 
 	// Plugin values.

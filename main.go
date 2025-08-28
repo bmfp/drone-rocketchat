@@ -17,7 +17,7 @@ func main() {
 		RunE:    run,
 		Short:   "Sending message to Rocket.Chat using Rest API",
 		Use:     "drone-rocketchat",
-		Version: "0.0.3",
+		Version: "0.0.4",
 	}
 
 	viper.AutomaticEnv()
@@ -32,13 +32,14 @@ func main() {
 	viper.BindPFlag("userId", flags.Lookup("userId"))
 	flags.String("userToken", "", "Rocket.chat user API token")
 	viper.BindPFlag("userToken", flags.Lookup("userToken"))
-	flags.String("roomid", "", "Rocket.chat channel name/roomId")
-	viper.BindPFlag("roomid", flags.Lookup("roomid"))
-	viper.BindPFlag("roomid", flags.Lookup("channel"))
+	flags.String("channel", "", "Rocket.chat channel name")
+	viper.BindPFlag("channel", flags.Lookup("channel"))
 	flags.String("message", "", "The message contents (up to 2000 characters)")
 	viper.BindPFlag("message", flags.Lookup("message"))
-	flags.String("custom-msg-fileds", "", "Custom fields, json dictionnary")
-	viper.BindPFlag("custom-msg-fileds", flags.Lookup("custom-msg-fileds"))
+	flags.String("custom-message-data", "", "Custom message data, json dictionnary")
+	viper.BindPFlag("custom-message-data", flags.Lookup("custom-message-data"))
+	flags.String("custom-msg-fields", "", "Custom fields, json dictionnary, has to be allowed")
+	viper.BindPFlag("custom-msg-fields", flags.Lookup("custom-msg-fields"))
 	flags.String("avatar-url", "", "Override the default avatar of user")
 	viper.BindPFlag("avatar-url", flags.Lookup("avatar-url"))
 	flags.Bool("drone", false, "Environment is drone")
@@ -223,20 +224,21 @@ func run(cmd *cobra.Command, args []string) error {
 			Message: viperGetStrings([]string{"drone_commit_message"}),
 		},
 		Config: Config{
-			URL:       viperGetStrings([]string{"plugin_url", "url"}),
-			Insecure:  viperGetBool([]string{"plugin_insecure", "insecure"}),
-			TrustedCA: viperGetStrings([]string{"plugin_trustedca", "trustedca"}),
-			UserID:    viperGetStrings([]string{"plugin_userId", "userId"}),
-			Token:     viperGetStrings([]string{"plugin_userToken", "userToken"}),
-			Message:   viperGetStrings([]string{"plugin_message", "message"}),
-			Drone:     viperGetBool([]string{"drone"}),
-			GitHub:    viperGetBool([]string{"plugin_github", "github"}),
-			EnvFile:   viperGetStrings([]string{"plugin_env_file", "env_file"}),
-			Debug:     viperGetBool([]string{"plugin_debug", "debug"}),
+			URL:               viperGetStrings([]string{"plugin_url", "url"}),
+			Insecure:          viperGetBool([]string{"plugin_insecure", "insecure"}),
+			TrustedCA:         viperGetStrings([]string{"plugin_trustedca", "trustedca"}),
+			UserID:            viperGetStrings([]string{"plugin_userId", "userId"}),
+			Token:             viperGetStrings([]string{"plugin_userToken", "userToken"}),
+			Message:           viperGetStrings([]string{"plugin_message", "message"}),
+			CustomMessageData: viperGetJSON([]string{"custom_msg_data"}),
+			Drone:             viperGetBool([]string{"drone"}),
+			GitHub:            viperGetBool([]string{"plugin_github", "github"}),
+			EnvFile:           viperGetStrings([]string{"plugin_env_file", "env_file"}),
+			Debug:             viperGetBool([]string{"plugin_debug", "debug"}),
 		},
 		Payload: Payload{
 			Avatar:          viperGetStrings([]string{"plugin_avatar_url", "avatar_url"}),
-			RoomId:          viperGetStrings([]string{"plugin_roomid", "roomid"}),
+			Channel:         viperGetStrings([]string{"plugin_channel", "channel"}),
 			CustomMSgFields: viperGetJSON([]string{"custom_msg_fields"}),
 		},
 	}
@@ -247,8 +249,9 @@ func run(cmd *cobra.Command, args []string) error {
 		fmt.Printf("trusted-ca: %q\n", plugin.Config.TrustedCA)
 		fmt.Printf("userId: %q\n", plugin.Config.UserID)
 		fmt.Printf("userToken: %q\n", plugin.Config.Token)
-		fmt.Printf("roomId: %q\n", plugin.Payload.RoomId)
+		fmt.Printf("channel: %q\n", plugin.Payload.Channel)
 		fmt.Printf("message: %q\n", plugin.Config.Message)
+		fmt.Printf("custommessagedata: %q\n", plugin.Config.CustomMessageData)
 		fmt.Printf("customfields: %q\n", plugin.Payload.CustomMSgFields)
 		fmt.Printf("avatar: %q\n", plugin.Payload.Avatar)
 		fmt.Printf("drone: %t\n", plugin.Config.Drone)
